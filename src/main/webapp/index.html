@@ -11,6 +11,7 @@
     <!-- build:css content/css/vendor.css -->
     <!-- bower:css -->
     <link rel="stylesheet" href="bower_components/angular-loading-bar/build/loading-bar.css">
+    <link rel="stylesheet" href="bower_components/textAngular/dist/textAngular.css">
     <!-- endinject -->
     <link rel="stylesheet" href="content/css/vendor.css">
     <!-- endbuild -->
@@ -51,6 +52,12 @@
     <script src="bower_components/json3/lib/json3.js"></script>
     <script src="bower_components/sockjs-client/dist/sockjs.js"></script>
     <script src="bower_components/stomp-websocket/lib/stomp.min.js"></script>
+    <script src="bower_components/rangy/rangy-core.js"></script>
+    <script src="bower_components/rangy/rangy-classapplier.js"></script>
+    <script src="bower_components/rangy/rangy-highlighter.js"></script>
+    <script src="bower_components/rangy/rangy-selectionsaverestore.js"></script>
+    <script src="bower_components/rangy/rangy-serializer.js"></script>
+    <script src="bower_components/rangy/rangy-textrange.js"></script>
     <script src="bower_components/angular/angular.js"></script>
     <script src="bower_components/angular-aria/angular-aria.js"></script>
     <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
@@ -69,6 +76,9 @@
     <script src="bower_components/bootstrap-ui-datetime-picker/dist/datetime-picker.js"></script>
     <script src="bower_components/ng-file-upload/ng-file-upload.js"></script>
     <script src="bower_components/ngInfiniteScroll/build/ng-infinite-scroll.js"></script>
+    <script src="bower_components/textAngular/dist/textAngular.js"></script>
+    <script src="bower_components/textAngular/dist/textAngular-sanitize.js"></script>
+    <script src="bower_components/textAngular/dist/textAngularSetup.js"></script>
     <!-- endinject -->
     <!-- endbuild -->
 
@@ -95,7 +105,28 @@
     <script src="app/layouts/error/error.state.js"></script>
     <script src="app/home/home.state.js"></script>
     <script src="app/home/home.controller.js"></script>
+    <script src="app/entities/tag/tag-dialog.controller.js"></script>
+    <script src="app/entities/tag/tag-detail.controller.js"></script>
+    <script src="app/entities/tag/tag-delete-dialog.controller.js"></script>
+    <script src="app/entities/tag/tag.state.js"></script>
+    <script src="app/entities/tag/tag.service.js"></script>
+    <script src="app/entities/tag/tag.search.service.js"></script>
+    <script src="app/entities/tag/tag.controller.js"></script>
+    <script src="app/entities/posts/posts-dialog.controller.js"></script>
+    <script src="app/entities/posts/posts-detail.controller.js"></script>
+    <script src="app/entities/posts/posts-delete-dialog.controller.js"></script>
+    <script src="app/entities/posts/posts.state.js"></script>
+    <script src="app/entities/posts/posts.service.js"></script>
+    <script src="app/entities/posts/posts.search.service.js"></script>
+    <script src="app/entities/posts/posts.controller.js"></script>
     <script src="app/entities/entity.state.js"></script>
+    <script src="app/entities/blog/blog-dialog.controller.js"></script>
+    <script src="app/entities/blog/blog-detail.controller.js"></script>
+    <script src="app/entities/blog/blog-delete-dialog.controller.js"></script>
+    <script src="app/entities/blog/blog.state.js"></script>
+    <script src="app/entities/blog/blog.service.js"></script>
+    <script src="app/entities/blog/blog.search.service.js"></script>
+    <script src="app/entities/blog/blog.controller.js"></script>
     <script src="app/components/util/truncate-words.filter.js"></script>
     <script src="app/components/util/truncate-characters.filter.js"></script>
     <script src="app/components/util/sort-by.directive.js"></script>
