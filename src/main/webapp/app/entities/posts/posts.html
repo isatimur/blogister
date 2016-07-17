@@ -38,7 +38,7 @@
             </h3>
             <div>
                 <span ng-bind-html="posts.content"></span><br>
-                <span>{{posts.creationdate | date: 'medium'}}</span>
+                <span>{{posts.creattionDate | date: 'medium'}}</span>
                 <span><a ui-sref="blog-detail({id:posts.blogId})">{{posts.blogName}}</a></span>
             </div>
             <br>
