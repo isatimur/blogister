@@ -1,0 +1,22 @@
+version: '2'
+services:
+    blogister-app:
+        image: blogister
+        external_links:
+            - blogister-postgresql:postgresql
+            - blogister-elasticsearch:elasticsearch
+        environment:
+            - SPRING_PROFILES_ACTIVE=prod
+            - SPRING_DATASOURCE_URL=jdbc:postgresql://postgresql:5432/blogister
+            - JHIPSTER_SLEEP=10 # gives time for the database to boot before the application
+            - SPRING_DATA_ELASTICSEARCH_CLUSTER_NODES=elasticsearch:9300
+        ports:
+            - 8080:8080
+    blogister-postgresql:
+        extends:
+            file: postgresql.yml
+            service: blogister-postgresql
+    blogister-elasticsearch:
+        extends:
+            file: elasticsearch.yml
+            service: blogister-elasticsearch
