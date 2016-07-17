@@ -15,24 +15,39 @@
     <!-- endinject -->
     <link rel="stylesheet" href="content/css/vendor.css">
     <!-- endbuild -->
+    <!-- placeholder link to load bootswatch themes, title holds the current applied theme name-->
+<link rel="stylesheet" href="" id="bootswatch-css" title="Default">
+
     <!-- build:css content/css/main.css -->
     <link rel="stylesheet" href="content/css/main.css">
     <!-- endbuild -->
 </head>
-<body ng-app="blogisterApp" ng-strict-di>
+<body ng-app="blogisterApp" ng-strict-di="">
     <!--[if lt IE 9]>
         <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
     <page-ribbon></page-ribbon>
-    <div ui-view="navbar" ng-cloak></div>
+    <div ui-view="navbar" ng-cloak=""></div>
     <div class="container">
         <div class="well" ui-view="content">
             <!-- Angular views -->
         </div>
 
-        <div class="footer" ng-cloak>
+        <div class="footer" ng-cloak="">
             <p translate="footer">This is your footer</p>
-        </div>
+            <div ng-controller="BootswatchController as vm" id="bootswatch-theme-switcher" uib-dropdown="" class="dropup pull-right">
+                    <a class="btn btn-default dropdown-toggle" uib-dropdown-toggle="">
+                        <span class="glyphicon glyphicon-adjust"></span>
+                        <span class="hidden-tablet" translate="bootswatch.themeSelector">Theme</span>
+                        <b class="caret"></b>
+                    </a>
+                    <ul class="dropdown-menu" role="menu" uib-dropdown-menu="">
+                        <li class="theme-link" ng-repeat="theme in vm.themes">
+                            <a href="" jh-switch-theme="theme">{{theme.name}}</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
     </div>
 
     <!-- Google Analytics: uncomment and change UA-XXXXX-X to be your site's ID.
@@ -144,10 +159,14 @@
     <script src="app/components/language/language.filter.js"></script>
     <script src="app/components/language/language.controller.js"></script>
     <script src="app/components/language/language.constants.js"></script>
+    <script src="app/components/interceptor/bootswatch.interceptor.js"></script>
     <script src="app/components/form/show-validation.directive.js"></script>
     <script src="app/components/form/pagination.constants.js"></script>
     <script src="app/components/form/minbytes.directive.js"></script>
     <script src="app/components/form/maxbytes.directive.js"></script>
+    <script src="app/components/bootswatch/bootswatch.service.js"></script>
+    <script src="app/components/bootswatch/bootswatch.directive.js"></script>
+    <script src="app/components/bootswatch/bootswatch.controller.js"></script>
     <script src="app/components/alert/alert-error.directive.js"></script>
     <script src="app/components/alert/alert.service.js"></script>
     <script src="app/components/alert/alert.directive.js"></script>

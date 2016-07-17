@@ -75,10 +75,10 @@
             }
         },
         "field": {
-            "id" : "ID"
+            "id": "ID"
         },
         "ribbon": {
-            "dev":"Development"
+            "dev": "Development"
         }
     },
     "entity": {
@@ -122,5 +122,8 @@
         "emailexists": "Эл. почта уже используется!!",
         "idexists": "Новый {{entityName}} не может иметь данный ID"
     },
-    "footer": "Это ваш футтер"
+    "footer": "Это ваш футтер",
+    "bootswatch": {
+        "themeSelector": "Theme"
+    }
 }

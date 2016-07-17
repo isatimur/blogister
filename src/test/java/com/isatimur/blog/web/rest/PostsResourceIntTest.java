@@ -4,6 +4,8 @@ import com.isatimur.blog.BlogisterApp;
 import com.isatimur.blog.domain.Posts;
 import com.isatimur.blog.repository.PostsRepository;
 import com.isatimur.blog.repository.search.PostsSearchRepository;
+import com.isatimur.blog.web.rest.dto.PostsDTO;
+import com.isatimur.blog.web.rest.mapper.PostsMapper;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -61,6 +63,9 @@ public class PostsResourceIntTest {
     private PostsRepository postsRepository;
 
     @Inject
+    private PostsMapper postsMapper;
+
+    @Inject
     private PostsSearchRepository postsSearchRepository;
 
     @Inject
@@ -79,6 +84,7 @@ public class PostsResourceIntTest {
         PostsResource postsResource = new PostsResource();
         ReflectionTestUtils.setField(postsResource, "postsSearchRepository", postsSearchRepository);
         ReflectionTestUtils.setField(postsResource, "postsRepository", postsRepository);
+        ReflectionTestUtils.setField(postsResource, "postsMapper", postsMapper);
         this.restPostsMockMvc = MockMvcBuilders.standaloneSetup(postsResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setMessageConverters(jacksonMessageConverter).build();
@@ -99,10 +105,11 @@ public class PostsResourceIntTest {
         int databaseSizeBeforeCreate = postsRepository.findAll().size();
 
         // Create the Posts
+        PostsDTO postsDTO = postsMapper.postsToPostsDTO(posts);
 
         restPostsMockMvc.perform(post("/api/posts")
                 .contentType(TestUtil.APPLICATION_JSON_UTF8)
-                .content(TestUtil.convertObjectToJsonBytes(posts)))
+                .content(TestUtil.convertObjectToJsonBytes(postsDTO)))
                 .andExpect(status().isCreated());
 
         // Validate the Posts in the database
@@ -126,10 +133,11 @@ public class PostsResourceIntTest {
         posts.setTitle(null);
 
         // Create the Posts, which fails.
+        PostsDTO postsDTO = postsMapper.postsToPostsDTO(posts);
 
         restPostsMockMvc.perform(post("/api/posts")
                 .contentType(TestUtil.APPLICATION_JSON_UTF8)
-                .content(TestUtil.convertObjectToJsonBytes(posts)))
+                .content(TestUtil.convertObjectToJsonBytes(postsDTO)))
                 .andExpect(status().isBadRequest());
 
         List<Posts> posts = postsRepository.findAll();
@@ -144,10 +152,11 @@ public class PostsResourceIntTest {
         posts.setContent(null);
 
         // Create the Posts, which fails.
+        PostsDTO postsDTO = postsMapper.postsToPostsDTO(posts);
 
         restPostsMockMvc.perform(post("/api/posts")
                 .contentType(TestUtil.APPLICATION_JSON_UTF8)
-                .content(TestUtil.convertObjectToJsonBytes(posts)))
+                .content(TestUtil.convertObjectToJsonBytes(postsDTO)))
                 .andExpect(status().isBadRequest());
 
         List<Posts> posts = postsRepository.findAll();
@@ -162,10 +171,11 @@ public class PostsResourceIntTest {
         posts.setCreattionDate(null);
 
         // Create the Posts, which fails.
+        PostsDTO postsDTO = postsMapper.postsToPostsDTO(posts);
 
         restPostsMockMvc.perform(post("/api/posts")
                 .contentType(TestUtil.APPLICATION_JSON_UTF8)
-                .content(TestUtil.convertObjectToJsonBytes(posts)))
+                .content(TestUtil.convertObjectToJsonBytes(postsDTO)))
                 .andExpect(status().isBadRequest());
 
         List<Posts> posts = postsRepository.findAll();
@@ -226,10 +236,11 @@ public class PostsResourceIntTest {
         updatedPosts.setTitle(UPDATED_TITLE);
         updatedPosts.setContent(UPDATED_CONTENT);
         updatedPosts.setCreattionDate(UPDATED_CREATTION_DATE);
+        PostsDTO postsDTO = postsMapper.postsToPostsDTO(updatedPosts);
 
         restPostsMockMvc.perform(put("/api/posts")
                 .contentType(TestUtil.APPLICATION_JSON_UTF8)
-                .content(TestUtil.convertObjectToJsonBytes(updatedPosts)))
+                .content(TestUtil.convertObjectToJsonBytes(postsDTO)))
                 .andExpect(status().isOk());
 
         // Validate the Posts in the database

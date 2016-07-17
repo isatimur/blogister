@@ -4,6 +4,8 @@ import com.isatimur.blog.BlogisterApp;
 import com.isatimur.blog.domain.Tag;
 import com.isatimur.blog.repository.TagRepository;
 import com.isatimur.blog.repository.search.TagSearchRepository;
+import com.isatimur.blog.web.rest.dto.TagDTO;
+import com.isatimur.blog.web.rest.mapper.TagMapper;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -49,6 +51,9 @@ public class TagResourceIntTest {
     private TagRepository tagRepository;
 
     @Inject
+    private TagMapper tagMapper;
+
+    @Inject
     private TagSearchRepository tagSearchRepository;
 
     @Inject
@@ -67,6 +72,7 @@ public class TagResourceIntTest {
         TagResource tagResource = new TagResource();
         ReflectionTestUtils.setField(tagResource, "tagSearchRepository", tagSearchRepository);
         ReflectionTestUtils.setField(tagResource, "tagRepository", tagRepository);
+        ReflectionTestUtils.setField(tagResource, "tagMapper", tagMapper);
         this.restTagMockMvc = MockMvcBuilders.standaloneSetup(tagResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setMessageConverters(jacksonMessageConverter).build();
@@ -85,10 +91,11 @@ public class TagResourceIntTest {
         int databaseSizeBeforeCreate = tagRepository.findAll().size();
 
         // Create the Tag
+        TagDTO tagDTO = tagMapper.tagToTagDTO(tag);
 
         restTagMockMvc.perform(post("/api/tags")
                 .contentType(TestUtil.APPLICATION_JSON_UTF8)
-                .content(TestUtil.convertObjectToJsonBytes(tag)))
+                .content(TestUtil.convertObjectToJsonBytes(tagDTO)))
                 .andExpect(status().isCreated());
 
         // Validate the Tag in the database
@@ -110,10 +117,11 @@ public class TagResourceIntTest {
         tag.setName(null);
 
         // Create the Tag, which fails.
+        TagDTO tagDTO = tagMapper.tagToTagDTO(tag);
 
         restTagMockMvc.perform(post("/api/tags")
                 .contentType(TestUtil.APPLICATION_JSON_UTF8)
-                .content(TestUtil.convertObjectToJsonBytes(tag)))
+                .content(TestUtil.convertObjectToJsonBytes(tagDTO)))
                 .andExpect(status().isBadRequest());
 
         List<Tag> tags = tagRepository.findAll();
@@ -168,10 +176,11 @@ public class TagResourceIntTest {
         Tag updatedTag = new Tag();
         updatedTag.setId(tag.getId());
         updatedTag.setName(UPDATED_NAME);
+        TagDTO tagDTO = tagMapper.tagToTagDTO(updatedTag);
 
         restTagMockMvc.perform(put("/api/tags")
                 .contentType(TestUtil.APPLICATION_JSON_UTF8)
-                .content(TestUtil.convertObjectToJsonBytes(updatedTag)))
+                .content(TestUtil.convertObjectToJsonBytes(tagDTO)))
                 .andExpect(status().isOk());
 
         // Validate the Tag in the database

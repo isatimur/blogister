@@ -4,6 +4,8 @@ import com.isatimur.blog.BlogisterApp;
 import com.isatimur.blog.domain.Blog;
 import com.isatimur.blog.repository.BlogRepository;
 import com.isatimur.blog.repository.search.BlogSearchRepository;
+import com.isatimur.blog.web.rest.dto.BlogDTO;
+import com.isatimur.blog.web.rest.mapper.BlogMapper;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -51,6 +53,9 @@ public class BlogResourceIntTest {
     private BlogRepository blogRepository;
 
     @Inject
+    private BlogMapper blogMapper;
+
+    @Inject
     private BlogSearchRepository blogSearchRepository;
 
     @Inject
@@ -69,6 +74,7 @@ public class BlogResourceIntTest {
         BlogResource blogResource = new BlogResource();
         ReflectionTestUtils.setField(blogResource, "blogSearchRepository", blogSearchRepository);
         ReflectionTestUtils.setField(blogResource, "blogRepository", blogRepository);
+        ReflectionTestUtils.setField(blogResource, "blogMapper", blogMapper);
         this.restBlogMockMvc = MockMvcBuilders.standaloneSetup(blogResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setMessageConverters(jacksonMessageConverter).build();
@@ -88,10 +94,11 @@ public class BlogResourceIntTest {
         int databaseSizeBeforeCreate = blogRepository.findAll().size();
 
         // Create the Blog
+        BlogDTO blogDTO = blogMapper.blogToBlogDTO(blog);
 
         restBlogMockMvc.perform(post("/api/blogs")
                 .contentType(TestUtil.APPLICATION_JSON_UTF8)
-                .content(TestUtil.convertObjectToJsonBytes(blog)))
+                .content(TestUtil.convertObjectToJsonBytes(blogDTO)))
                 .andExpect(status().isCreated());
 
         // Validate the Blog in the database
@@ -114,10 +121,11 @@ public class BlogResourceIntTest {
         blog.setName(null);
 
         // Create the Blog, which fails.
+        BlogDTO blogDTO = blogMapper.blogToBlogDTO(blog);
 
         restBlogMockMvc.perform(post("/api/blogs")
                 .contentType(TestUtil.APPLICATION_JSON_UTF8)
-                .content(TestUtil.convertObjectToJsonBytes(blog)))
+                .content(TestUtil.convertObjectToJsonBytes(blogDTO)))
                 .andExpect(status().isBadRequest());
 
         List<Blog> blogs = blogRepository.findAll();
@@ -132,10 +140,11 @@ public class BlogResourceIntTest {
         blog.setHandle(null);
 
         // Create the Blog, which fails.
+        BlogDTO blogDTO = blogMapper.blogToBlogDTO(blog);
 
         restBlogMockMvc.perform(post("/api/blogs")
                 .contentType(TestUtil.APPLICATION_JSON_UTF8)
-                .content(TestUtil.convertObjectToJsonBytes(blog)))
+                .content(TestUtil.convertObjectToJsonBytes(blogDTO)))
                 .andExpect(status().isBadRequest());
 
         List<Blog> blogs = blogRepository.findAll();
@@ -193,10 +202,11 @@ public class BlogResourceIntTest {
         updatedBlog.setId(blog.getId());
         updatedBlog.setName(UPDATED_NAME);
         updatedBlog.setHandle(UPDATED_HANDLE);
+        BlogDTO blogDTO = blogMapper.blogToBlogDTO(updatedBlog);
 
         restBlogMockMvc.perform(put("/api/blogs")
                 .contentType(TestUtil.APPLICATION_JSON_UTF8)
-                .content(TestUtil.convertObjectToJsonBytes(updatedBlog)))
+                .content(TestUtil.convertObjectToJsonBytes(blogDTO)))
                 .andExpect(status().isOk());
 
         // Validate the Blog in the database

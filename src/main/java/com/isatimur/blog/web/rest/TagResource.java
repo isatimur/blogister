@@ -6,6 +6,8 @@ import com.isatimur.blog.repository.TagRepository;
 import com.isatimur.blog.repository.search.TagSearchRepository;
 import com.isatimur.blog.web.rest.util.HeaderUtil;
 import com.isatimur.blog.web.rest.util.PaginationUtil;
+import com.isatimur.blog.web.rest.dto.TagDTO;
+import com.isatimur.blog.web.rest.mapper.TagMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -20,6 +22,7 @@ import javax.inject.Inject;
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -40,26 +43,31 @@ public class TagResource {
     private TagRepository tagRepository;
     
     @Inject
+    private TagMapper tagMapper;
+    
+    @Inject
     private TagSearchRepository tagSearchRepository;
     
     /**
      * POST  /tags : Create a new tag.
      *
-     * @param tag the tag to create
-     * @return the ResponseEntity with status 201 (Created) and with body the new tag, or with status 400 (Bad Request) if the tag has already an ID
+     * @param tagDTO the tagDTO to create
+     * @return the ResponseEntity with status 201 (Created) and with body the new tagDTO, or with status 400 (Bad Request) if the tag has already an ID
      * @throws URISyntaxException if the Location URI syntax is incorrect
      */
     @RequestMapping(value = "/tags",
         method = RequestMethod.POST,
         produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    public ResponseEntity<Tag> createTag(@Valid @RequestBody Tag tag) throws URISyntaxException {
-        log.debug("REST request to save Tag : {}", tag);
-        if (tag.getId() != null) {
+    public ResponseEntity<TagDTO> createTag(@Valid @RequestBody TagDTO tagDTO) throws URISyntaxException {
+        log.debug("REST request to save Tag : {}", tagDTO);
+        if (tagDTO.getId() != null) {
             return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert("tag", "idexists", "A new tag cannot already have an ID")).body(null);
         }
-        Tag result = tagRepository.save(tag);
-        tagSearchRepository.save(result);
+        Tag tag = tagMapper.tagDTOToTag(tagDTO);
+        tag = tagRepository.save(tag);
+        TagDTO result = tagMapper.tagToTagDTO(tag);
+        tagSearchRepository.save(tag);
         return ResponseEntity.created(new URI("/api/tags/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert("tag", result.getId().toString()))
             .body(result);
@@ -68,25 +76,27 @@ public class TagResource {
     /**
      * PUT  /tags : Updates an existing tag.
      *
-     * @param tag the tag to update
-     * @return the ResponseEntity with status 200 (OK) and with body the updated tag,
-     * or with status 400 (Bad Request) if the tag is not valid,
-     * or with status 500 (Internal Server Error) if the tag couldnt be updated
+     * @param tagDTO the tagDTO to update
+     * @return the ResponseEntity with status 200 (OK) and with body the updated tagDTO,
+     * or with status 400 (Bad Request) if the tagDTO is not valid,
+     * or with status 500 (Internal Server Error) if the tagDTO couldnt be updated
      * @throws URISyntaxException if the Location URI syntax is incorrect
      */
     @RequestMapping(value = "/tags",
         method = RequestMethod.PUT,
         produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    public ResponseEntity<Tag> updateTag(@Valid @RequestBody Tag tag) throws URISyntaxException {
-        log.debug("REST request to update Tag : {}", tag);
-        if (tag.getId() == null) {
-            return createTag(tag);
+    public ResponseEntity<TagDTO> updateTag(@Valid @RequestBody TagDTO tagDTO) throws URISyntaxException {
+        log.debug("REST request to update Tag : {}", tagDTO);
+        if (tagDTO.getId() == null) {
+            return createTag(tagDTO);
         }
-        Tag result = tagRepository.save(tag);
-        tagSearchRepository.save(result);
+        Tag tag = tagMapper.tagDTOToTag(tagDTO);
+        tag = tagRepository.save(tag);
+        TagDTO result = tagMapper.tagToTagDTO(tag);
+        tagSearchRepository.save(tag);
         return ResponseEntity.ok()
-            .headers(HeaderUtil.createEntityUpdateAlert("tag", tag.getId().toString()))
+            .headers(HeaderUtil.createEntityUpdateAlert("tag", tagDTO.getId().toString()))
             .body(result);
     }
 
@@ -101,28 +111,29 @@ public class TagResource {
         method = RequestMethod.GET,
         produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    public ResponseEntity<List<Tag>> getAllTags(Pageable pageable)
+    public ResponseEntity<List<TagDTO>> getAllTags(Pageable pageable)
         throws URISyntaxException {
         log.debug("REST request to get a page of Tags");
         Page<Tag> page = tagRepository.findAll(pageable); 
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/tags");
-        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+        return new ResponseEntity<>(tagMapper.tagsToTagDTOs(page.getContent()), headers, HttpStatus.OK);
     }
 
     /**
      * GET  /tags/:id : get the "id" tag.
      *
-     * @param id the id of the tag to retrieve
-     * @return the ResponseEntity with status 200 (OK) and with body the tag, or with status 404 (Not Found)
+     * @param id the id of the tagDTO to retrieve
+     * @return the ResponseEntity with status 200 (OK) and with body the tagDTO, or with status 404 (Not Found)
      */
     @RequestMapping(value = "/tags/{id}",
         method = RequestMethod.GET,
         produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    public ResponseEntity<Tag> getTag(@PathVariable Long id) {
+    public ResponseEntity<TagDTO> getTag(@PathVariable Long id) {
         log.debug("REST request to get Tag : {}", id);
         Tag tag = tagRepository.findOne(id);
-        return Optional.ofNullable(tag)
+        TagDTO tagDTO = tagMapper.tagToTagDTO(tag);
+        return Optional.ofNullable(tagDTO)
             .map(result -> new ResponseEntity<>(
                 result,
                 HttpStatus.OK))
@@ -132,7 +143,7 @@ public class TagResource {
     /**
      * DELETE  /tags/:id : delete the "id" tag.
      *
-     * @param id the id of the tag to delete
+     * @param id the id of the tagDTO to delete
      * @return the ResponseEntity with status 200 (OK)
      */
     @RequestMapping(value = "/tags/{id}",
@@ -157,12 +168,12 @@ public class TagResource {
         method = RequestMethod.GET,
         produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    public ResponseEntity<List<Tag>> searchTags(@RequestParam String query, Pageable pageable)
+    public ResponseEntity<List<TagDTO>> searchTags(@RequestParam String query, Pageable pageable)
         throws URISyntaxException {
         log.debug("REST request to search for a page of Tags for query {}", query);
         Page<Tag> page = tagSearchRepository.search(queryStringQuery(query), pageable);
         HttpHeaders headers = PaginationUtil.generateSearchPaginationHttpHeaders(query, page, "/api/_search/tags");
-        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+        return new ResponseEntity<>(tagMapper.tagsToTagDTOs(page.getContent()), headers, HttpStatus.OK);
     }
 
 

@@ -6,6 +6,8 @@ import com.isatimur.blog.repository.PostsRepository;
 import com.isatimur.blog.repository.search.PostsSearchRepository;
 import com.isatimur.blog.web.rest.util.HeaderUtil;
 import com.isatimur.blog.web.rest.util.PaginationUtil;
+import com.isatimur.blog.web.rest.dto.PostsDTO;
+import com.isatimur.blog.web.rest.mapper.PostsMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -20,6 +22,7 @@ import javax.inject.Inject;
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -40,26 +43,31 @@ public class PostsResource {
     private PostsRepository postsRepository;
     
     @Inject
+    private PostsMapper postsMapper;
+    
+    @Inject
     private PostsSearchRepository postsSearchRepository;
     
     /**
      * POST  /posts : Create a new posts.
      *
-     * @param posts the posts to create
-     * @return the ResponseEntity with status 201 (Created) and with body the new posts, or with status 400 (Bad Request) if the posts has already an ID
+     * @param postsDTO the postsDTO to create
+     * @return the ResponseEntity with status 201 (Created) and with body the new postsDTO, or with status 400 (Bad Request) if the posts has already an ID
      * @throws URISyntaxException if the Location URI syntax is incorrect
      */
     @RequestMapping(value = "/posts",
         method = RequestMethod.POST,
         produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    public ResponseEntity<Posts> createPosts(@Valid @RequestBody Posts posts) throws URISyntaxException {
-        log.debug("REST request to save Posts : {}", posts);
-        if (posts.getId() != null) {
+    public ResponseEntity<PostsDTO> createPosts(@Valid @RequestBody PostsDTO postsDTO) throws URISyntaxException {
+        log.debug("REST request to save Posts : {}", postsDTO);
+        if (postsDTO.getId() != null) {
             return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert("posts", "idexists", "A new posts cannot already have an ID")).body(null);
         }
-        Posts result = postsRepository.save(posts);
-        postsSearchRepository.save(result);
+        Posts posts = postsMapper.postsDTOToPosts(postsDTO);
+        posts = postsRepository.save(posts);
+        PostsDTO result = postsMapper.postsToPostsDTO(posts);
+        postsSearchRepository.save(posts);
         return ResponseEntity.created(new URI("/api/posts/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert("posts", result.getId().toString()))
             .body(result);
@@ -68,25 +76,27 @@ public class PostsResource {
     /**
      * PUT  /posts : Updates an existing posts.
      *
-     * @param posts the posts to update
-     * @return the ResponseEntity with status 200 (OK) and with body the updated posts,
-     * or with status 400 (Bad Request) if the posts is not valid,
-     * or with status 500 (Internal Server Error) if the posts couldnt be updated
+     * @param postsDTO the postsDTO to update
+     * @return the ResponseEntity with status 200 (OK) and with body the updated postsDTO,
+     * or with status 400 (Bad Request) if the postsDTO is not valid,
+     * or with status 500 (Internal Server Error) if the postsDTO couldnt be updated
      * @throws URISyntaxException if the Location URI syntax is incorrect
      */
     @RequestMapping(value = "/posts",
         method = RequestMethod.PUT,
         produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    public ResponseEntity<Posts> updatePosts(@Valid @RequestBody Posts posts) throws URISyntaxException {
-        log.debug("REST request to update Posts : {}", posts);
-        if (posts.getId() == null) {
-            return createPosts(posts);
+    public ResponseEntity<PostsDTO> updatePosts(@Valid @RequestBody PostsDTO postsDTO) throws URISyntaxException {
+        log.debug("REST request to update Posts : {}", postsDTO);
+        if (postsDTO.getId() == null) {
+            return createPosts(postsDTO);
         }
-        Posts result = postsRepository.save(posts);
-        postsSearchRepository.save(result);
+        Posts posts = postsMapper.postsDTOToPosts(postsDTO);
+        posts = postsRepository.save(posts);
+        PostsDTO result = postsMapper.postsToPostsDTO(posts);
+        postsSearchRepository.save(posts);
         return ResponseEntity.ok()
-            .headers(HeaderUtil.createEntityUpdateAlert("posts", posts.getId().toString()))
+            .headers(HeaderUtil.createEntityUpdateAlert("posts", postsDTO.getId().toString()))
             .body(result);
     }
 
@@ -101,28 +111,29 @@ public class PostsResource {
         method = RequestMethod.GET,
         produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    public ResponseEntity<List<Posts>> getAllPosts(Pageable pageable)
+    public ResponseEntity<List<PostsDTO>> getAllPosts(Pageable pageable)
         throws URISyntaxException {
         log.debug("REST request to get a page of Posts");
-        Page<Posts> page = postsRepository.findAll(pageable); 
+        Page<Posts> page = postsRepository.findAllByBlogUserLogin(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/posts");
-        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+        return new ResponseEntity<>(postsMapper.postsToPostsDTOs(page.getContent()), headers, HttpStatus.OK);
     }
 
     /**
      * GET  /posts/:id : get the "id" posts.
      *
-     * @param id the id of the posts to retrieve
-     * @return the ResponseEntity with status 200 (OK) and with body the posts, or with status 404 (Not Found)
+     * @param id the id of the postsDTO to retrieve
+     * @return the ResponseEntity with status 200 (OK) and with body the postsDTO, or with status 404 (Not Found)
      */
     @RequestMapping(value = "/posts/{id}",
         method = RequestMethod.GET,
         produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    public ResponseEntity<Posts> getPosts(@PathVariable Long id) {
+    public ResponseEntity<PostsDTO> getPosts(@PathVariable Long id) {
         log.debug("REST request to get Posts : {}", id);
         Posts posts = postsRepository.findOneWithEagerRelationships(id);
-        return Optional.ofNullable(posts)
+        PostsDTO postsDTO = postsMapper.postsToPostsDTO(posts);
+        return Optional.ofNullable(postsDTO)
             .map(result -> new ResponseEntity<>(
                 result,
                 HttpStatus.OK))
@@ -132,7 +143,7 @@ public class PostsResource {
     /**
      * DELETE  /posts/:id : delete the "id" posts.
      *
-     * @param id the id of the posts to delete
+     * @param id the id of the postsDTO to delete
      * @return the ResponseEntity with status 200 (OK)
      */
     @RequestMapping(value = "/posts/{id}",
@@ -157,12 +168,12 @@ public class PostsResource {
         method = RequestMethod.GET,
         produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    public ResponseEntity<List<Posts>> searchPosts(@RequestParam String query, Pageable pageable)
+    public ResponseEntity<List<PostsDTO>> searchPosts(@RequestParam String query, Pageable pageable)
         throws URISyntaxException {
         log.debug("REST request to search for a page of Posts for query {}", query);
         Page<Posts> page = postsSearchRepository.search(queryStringQuery(query), pageable);
         HttpHeaders headers = PaginationUtil.generateSearchPaginationHttpHeaders(query, page, "/api/_search/posts");
-        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+        return new ResponseEntity<>(postsMapper.postsToPostsDTOs(page.getContent()), headers, HttpStatus.OK);
     }
 
 

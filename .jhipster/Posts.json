@@ -43,7 +43,7 @@
     }
   ],
   "changelogDate": "20160717141242",
-  "dto": "no",
+  "dto": "mapstruct",
   "pagination": "pagination",
   "service": "no",
   "entityTableName": "posts"

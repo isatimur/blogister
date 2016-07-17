@@ -20,7 +20,7 @@
     }
   ],
   "changelogDate": "20160717141243",
-  "dto": "no",
+  "dto": "mapstruct",
   "pagination": "pagination",
   "service": "no",
   "entityTableName": "tag"

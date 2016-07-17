@@ -2,6 +2,8 @@ package com.isatimur.blog.repository;
 
 import com.isatimur.blog.domain.Posts;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.*;
 import org.springframework.data.repository.query.Param;
 
@@ -18,5 +20,8 @@ public interface PostsRepository extends JpaRepository<Posts,Long> {
 
     @Query("select posts from Posts posts left join fetch posts.tags where posts.id =:id")
     Posts findOneWithEagerRelationships(@Param("id") Long id);
+
+    @Query("select posts from Posts posts where posts.blog.user.login = ?#{principal.username}")
+    Page<Posts> findAllByBlogUserLogin(Pageable pageable);
 
 }

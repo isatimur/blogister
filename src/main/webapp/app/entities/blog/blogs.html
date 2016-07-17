@@ -34,11 +34,11 @@
     <div class="table-responsive">
         <table class="jh-table table table-striped">
             <thead>
-                <tr jh-sort="vm.predicate" ascending="vm.reverse" callback="vm.transition()">
-                    <th jh-sort-by="id"><span translate="global.field.id">ID</span> <span class="glyphicon glyphicon-sort"></span></th>
-                    <th jh-sort-by="name"><span translate="blogisterApp.blog.name">Name</span> <span class="glyphicon glyphicon-sort"></span></th>
-                    <th jh-sort-by="handle"><span translate="blogisterApp.blog.handle">Handle</span> <span class="glyphicon glyphicon-sort"></span></th>
-                    <th jh-sort-by="user.login"><span translate="blogisterApp.blog.user">User</span> <span class="glyphicon glyphicon-sort"></span></th>
+                <tr>
+                    <th><span translate="global.field.id">ID</span></th>
+                    <th><span translate="blogisterApp.blog.name">Name</span></th>
+                    <th><span translate="blogisterApp.blog.handle">Handle</span></th>
+                    <th><span translate="blogisterApp.blog.user">User</span></th>
                     <th></th>
                 </tr>
             </thead>
@@ -48,7 +48,7 @@
                     <td>{{blog.name}}</td>
                     <td>{{blog.handle}}</td>
                     <td>
-                        {{blog.user.login}}
+                        {{blog.userLogin}}
                     </td>
                     <td class="text-right">
                         <div class="btn-group flex-btn-group-container">
@@ -75,9 +75,5 @@
                 </tr>
             </tbody>
         </table>
-    </div>
-    <div class="text-center">
-        <jhi-item-count page="vm.page" total="vm.queryCount" items-per-page="vm.itemsPerPage"></jhi-item-count>
-        <uib-pagination class="pagination-sm" total-items="vm.totalItems" ng-model="vm.page" ng-change="vm.transition()"></uib-pagination>
     </div>
 </div>
