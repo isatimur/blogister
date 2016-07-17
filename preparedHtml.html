@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <div>
+        <div ng-repeat="entry in vm.entries track by entry.id">
+            <h3>
+                <a ui-sref="entry-detail({id:entry.id})">{{entry.title}}</a>
+            </h3>
+            <div>
+                <span ng-bind-html="entry.content"></span><br>
+                <span>{{entry.date | date: 'medium'}}</span>
+                <span><a ui-sref="blog-detail({id:entry.blogId})">{{entry.blogName}}</a></span>
+            </div>
+            <br>
+            <div class="btn-group">
+                <button type="submit"
+                        ui-sref="entry-detail({id:entry.id})"
+                        class="btn btn-info btn-sm">
+                    <span class="glyphicon glyphicon-eye-open"></span>
+                </button>
+                <button type="submit"
+                        ui-sref="entry.edit({id:entry.id})"
+                        class="btn btn-primary btn-sm">
+                    <span class="glyphicon glyphicon-pencil"></span>
+                </button>
+                <button type="submit"
+                        ui-sref="entry.delete({id:entry.id})"
+                        class="btn btn-danger btn-sm">
+                    <span class="glyphicon glyphicon-remove-circle"></span>
+                </button>
+             </div>
+        </div>
+    </div>
+
+</body>
+</html>

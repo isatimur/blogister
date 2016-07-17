@@ -1,0 +1,26 @@
+{
+    "blogisterApp": {
+        "posts" : {
+            "home": {
+                "title": "Posts",
+                "createLabel": "Создать новый Posts",
+                "createOrEditLabel": "Создать или отредактировать Posts",
+                "search": "Найти Posts"
+            },
+            "created": "Новый Posts создан с идентификатором {{ param }}",
+            "updated": "Posts обновлен с идентификатором {{ param }}",
+            "deleted": "Posts удален с идентификатором {{ param }}",
+            "delete": {
+                "question": "Вы уверены что хотите удалить Posts {{ id }}?"
+            },
+            "detail": {
+                "title": "Posts"
+            },
+            "title": "Title",
+            "content": "Content",
+            "creattionDate": "Creattion Date",
+            "tag": "Tag",
+            "blog": "Blog"
+        }
+    }
+}

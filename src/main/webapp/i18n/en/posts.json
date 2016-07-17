@@ -1,0 +1,26 @@
+{
+    "blogisterApp": {
+        "posts" : {
+            "home": {
+                "title": "Posts",
+                "createLabel": "Create a new Posts",
+                "createOrEditLabel": "Create or edit a Posts",
+                "search": "Search for Posts"
+            },
+            "created": "A new Posts is created with identifier {{ param }}",
+            "updated": "A Posts is updated with identifier {{ param }}",
+            "deleted": "A Posts is deleted with identifier {{ param }}",
+            "delete": {
+                "question": "Are you sure you want to delete Posts {{ id }}?"
+            },
+            "detail": {
+                "title": "Posts"
+            },
+            "title": "Title",
+            "content": "Content",
+            "creattionDate": "Creattion Date",
+            "tag": "Tag",
+            "blog": "Blog"
+        }
+    }
+}

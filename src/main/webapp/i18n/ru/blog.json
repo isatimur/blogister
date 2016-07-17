@@ -1,0 +1,25 @@
+{
+    "blogisterApp": {
+        "blog" : {
+            "home": {
+                "title": "Blogs",
+                "createLabel": "Создать новый Blog",
+                "createOrEditLabel": "Создать или отредактировать Blog",
+                "search": "Найти Blog"
+            },
+            "created": "Новый Blog создан с идентификатором {{ param }}",
+            "updated": "Blog обновлен с идентификатором {{ param }}",
+            "deleted": "Blog удален с идентификатором {{ param }}",
+            "delete": {
+                "question": "Вы уверены что хотите удалить Blog {{ id }}?"
+            },
+            "detail": {
+                "title": "Blog"
+            },
+            "name": "Name",
+            "handle": "Handle",
+            "user": "User",
+            "posts": "Posts"
+        }
+    }
+}

@@ -1,0 +1,26 @@
+
+<div>
+    <h2><span translate="blogisterApp.blog.detail.title">Blog</span> {{vm.blog.id}}</h2>
+    <hr>
+    <jhi-alert-error></jhi-alert-error>
+    <dl class="dl-horizontal jh-entity-details">
+        <dt><span translate="blogisterApp.blog.name">Name</span></dt>
+        <dd>
+            <span>{{vm.blog.name}}</span>
+        </dd>
+        <dt><span translate="blogisterApp.blog.handle">Handle</span></dt>
+        <dd>
+            <span>{{vm.blog.handle}}</span>
+        </dd>
+        <dt><span translate="blogisterApp.blog.user">User</span></dt>
+        <dd>
+            {{vm.blog.user.login}}
+        </dd>
+    </dl>
+
+    <button type="submit"
+            onclick="window.history.back()"
+            class="btn btn-info">
+        <span class="glyphicon glyphicon-arrow-left"></span>&nbsp;<span translate="entity.action.back"> Back</span>
+    </button>
+</div>

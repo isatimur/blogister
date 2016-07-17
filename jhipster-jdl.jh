@@ -1,0 +1,32 @@
+
+entity Blog {
+	name String required minlength(3),
+    handle String required
+}
+
+entity Posts {
+	title String required,
+    content String required,
+    creattionDate ZonedDateTime required
+
+}
+
+entity Tag {
+	name String required
+}
+
+relationship ManyToOne {
+        Blog{user(login)} to User
+}
+
+relationship OneToMany {
+	Blog{posts} to Posts{blog(name)}
+}
+
+relationship ManyToMany {
+	Posts{tag(name)} to Tag{posts}
+}
+
+paginate Posts, Tag with pagination
+
+

@@ -1,0 +1,43 @@
+{
+  "relationships": [
+    {
+      "relationshipId": 1,
+      "relationshipType": "many-to-one",
+      "relationshipName": "user",
+      "otherEntityName": "user",
+      "otherEntityField": "login"
+    },
+    {
+      "relationshipId": 2,
+      "relationshipType": "one-to-many",
+      "relationshipName": "posts",
+      "otherEntityName": "posts",
+      "otherEntityRelationshipName": "blog"
+    }
+  ],
+  "fields": [
+    {
+      "fieldId": 1,
+      "fieldName": "name",
+      "fieldType": "String",
+      "fieldValidateRules": [
+        "required",
+        "minlength"
+      ],
+      "fieldValidateRulesMinlength": 3
+    },
+    {
+      "fieldId": 2,
+      "fieldName": "handle",
+      "fieldType": "String",
+      "fieldValidateRules": [
+        "required"
+      ]
+    }
+  ],
+  "changelogDate": "20160717141241",
+  "dto": "no",
+  "pagination": "pagination",
+  "service": "no",
+  "entityTableName": "blog"
+}

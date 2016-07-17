@@ -1,0 +1,23 @@
+{
+    "blogisterApp": {
+        "tag" : {
+            "home": {
+                "title": "Tags",
+                "createLabel": "Создать новый Tag",
+                "createOrEditLabel": "Создать или отредактировать Tag",
+                "search": "Найти Tag"
+            },
+            "created": "Новый Tag создан с идентификатором {{ param }}",
+            "updated": "Tag обновлен с идентификатором {{ param }}",
+            "deleted": "Tag удален с идентификатором {{ param }}",
+            "delete": {
+                "question": "Вы уверены что хотите удалить Tag {{ id }}?"
+            },
+            "detail": {
+                "title": "Tag"
+            },
+            "name": "Name",
+            "posts": "Posts"
+        }
+    }
+}

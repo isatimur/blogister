@@ -1,0 +1,36 @@
+
+<div>
+    <h2><span translate="blogisterApp.posts.detail.title">Posts</span> {{vm.posts.id}}</h2>
+    <hr>
+    <jhi-alert-error></jhi-alert-error>
+    <dl class="dl-horizontal jh-entity-details">
+        <dt><span translate="blogisterApp.posts.title">Title</span></dt>
+        <dd>
+            <span>{{vm.posts.title}}</span>
+        </dd>
+        <dt><span translate="blogisterApp.posts.content">Content</span></dt>
+        <dd>
+            <span>{{vm.posts.content}}</span>
+        </dd>
+        <dt><span translate="blogisterApp.posts.creattionDate">Creattion Date</span></dt>
+        <dd>
+            <span>{{vm.posts.creattionDate | date:'medium'}}</span>
+        </dd>
+        <dt><span translate="blogisterApp.posts.tag">Tag</span></dt>
+        <dd>
+            <span ng-repeat="tag in vm.posts.tags">
+                <a ui-sref="tag-detail({id: {{tag.id}}})">{{tag.name}}</a>{{$last ? '' : ', '}}
+            </span>
+        </dd>
+        <dt><span translate="blogisterApp.posts.blog">Blog</span></dt>
+        <dd>
+            <a ui-sref="blog-detail({id:vm.posts.blog.id})">{{vm.posts.blog.name}}</a>
+        </dd>
+    </dl>
+
+    <button type="submit"
+            onclick="window.history.back()"
+            class="btn btn-info">
+        <span class="glyphicon glyphicon-arrow-left"></span>&nbsp;<span translate="entity.action.back"> Back</span>
+    </button>
+</div>

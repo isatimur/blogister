@@ -1,0 +1,27 @@
+{
+  "relationships": [
+    {
+      "relationshipId": 1,
+      "relationshipType": "many-to-many",
+      "relationshipName": "posts",
+      "otherEntityName": "posts",
+      "ownerSide": false,
+      "otherEntityRelationshipName": "tag"
+    }
+  ],
+  "fields": [
+    {
+      "fieldId": 1,
+      "fieldName": "name",
+      "fieldType": "String",
+      "fieldValidateRules": [
+        "required"
+      ]
+    }
+  ],
+  "changelogDate": "20160717141243",
+  "dto": "no",
+  "pagination": "pagination",
+  "service": "no",
+  "entityTableName": "tag"
+}
