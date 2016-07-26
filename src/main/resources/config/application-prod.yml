@@ -21,7 +21,7 @@ spring:
         url: jdbc:postgresql://localhost:5432/blogister
         name:
         username: blogister
-        password:
+        password: blogister-hipster
     jpa:
         database-platform: com.isatimur.blog.domain.util.FixedPostgreSQL82Dialect
         database: POSTGRESQL

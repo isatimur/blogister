@@ -122,8 +122,5 @@
         "emailexists": "Эл. почта уже используется!!",
         "idexists": "Новый {{entityName}} не может иметь данный ID"
     },
-    "footer": "Это ваш футтер",
-    "bootswatch": {
-        "themeSelector": "Theme"
-    }
+    "footer": "Это ваш футтер"
 }

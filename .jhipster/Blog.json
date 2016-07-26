@@ -36,7 +36,7 @@
     }
   ],
   "changelogDate": "20160717141241",
-  "dto": "mapstruct",
+  "dto": "no",
   "pagination": "no",
   "service": "no",
   "entityTableName": "blog"
