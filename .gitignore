@@ -105,6 +105,7 @@ Desktop.ini
 /bin/**
 /spring_loaded/**
 /deploy/**
+/src/main/webapp/bower_components
 
 ######################
 # Logs
