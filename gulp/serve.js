@@ -48,7 +48,7 @@ module.exports = function () {
         }));
 
     browserSync({
-        open: true,
+        open: false,
         port: config.port,
         server: {
             baseDir: config.app,
